@@ -815,7 +815,7 @@ Log a static string, without any context or `printf`-style templating:
 
 ### Field duplication
 
-Note that zerolog does no de-duplication of fields. Using the same key multiple times creates multiple keys in final JSON:
+Note that zerolog does no de-duplication of fields by default. Using the same key multiple times creates multiple keys in final JSON:
 
 ```go
 logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
@@ -826,6 +826,33 @@ logger.Info().
 ```
 
 In this case, many consumers will take the last value, but this is not guaranteed; check yours if in doubt.
+If you need de-duplication of fields, use the DeDup method. This is an expensive method so it is recommended to avoid it if able.
+Note that if the DeDuplication fails, it will fall back to printing all fields without deduplication.
+
+```go
+logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+logger.Info().
+       Timestamp().
+       DeDup().
+       Msg("dup")
+// Output: {"level":"info","time":1494567715,"time":1494567715,"message":"dup"}
+```
+
+You can also use the DeDup method when when creating a child logger which is preferred as you only pay for the performance hit once.
+
+```go
+logger := zerolog.New(os.Stderr).With().Str("foo", "bar").Timestamp().Logger()
+logger.Info().Msg("hello world")
+// Output: {"level":"info","time":1494567715,"foo":"bar","message":"hello world"}
+
+sublogger := logger.With().Str("foo", "baz").DeDup().Logger()
+sublogger.Info().Msg("hello world")
+// Output: {"level":"info","time":1494567715,"foo":"bar","foo":"baz","message":"hello world"}
+
+subloggerDeDup := logger.With().Str("foo", "baz").DeDup().Logger()
+subloggerDeDup.Info().Msg("hello world")
+// Output: {"level":"info","time":1494567715,"foo":"baz","message":"hello world"}
+```
 
 ### Concurrency safety
 
