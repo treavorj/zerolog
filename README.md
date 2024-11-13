@@ -702,6 +702,7 @@ Some settings can be changed and will be applied to all loggers:
 - `IPAddr`: Adds a field with `net.IP`.
 - `IPPrefix`: Adds a field with `net.IPNet`.
 - `MACAddr`: Adds a field with `net.HardwareAddr`
+- `Any`: Wrapper for `Interface`.
 
 Most fields are also available in the slice format (`Strs` for `[]string`, `Errs` for `[]error` etc.)
 
