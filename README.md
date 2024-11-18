@@ -1,8 +1,15 @@
 # Zero Allocation JSON Logger
 
-[![godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/rs/zerolog) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/rs/zerolog/master/LICENSE) [![Build Status](https://github.com/rs/zerolog/actions/workflows/test.yml/badge.svg)](https://github.com/rs/zerolog/actions/workflows/test.yml) [![Go Coverage](https://github.com/rs/zerolog/wiki/coverage.svg)](https://raw.githack.com/wiki/rs/zerolog/coverage.html)
+[![godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/treavorj/zerolog) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/rs/zerolog/master/LICENSE) [![Build Status](https://github.com/treavorj/zerolog/actions/workflows/test.yml/badge.svg)](https://github.com/treavorj/zerolog/actions/workflows/test.yml) [![Go Coverage](https://github.com/treavorj/zerolog/wiki/coverage.svg)](https://raw.githack.com/wiki/rs/zerolog/coverage.html)
+
+## Important Note:
 
 The zerolog package provides a fast and simple logger dedicated to JSON output.
+This is a fork from the [original zerolog](https://github.com/rs/zerolog) which adds on some advanced features:
+
+- DeDup for deduplication of log entries
+
+## Description
 
 Zerolog's API is designed to provide both a great developer experience and stunning [performance](#benchmarks). Its unique chaining API allows zerolog to write JSON (or CBOR) log events by avoiding allocations and reflection.
 
@@ -14,7 +21,7 @@ To keep the code base and the API simple, zerolog focuses on efficient structure
 
 ## Who uses zerolog
 
-Find out [who uses zerolog](https://github.com/rs/zerolog/wiki/Who-uses-zerolog) and add your company / project to the list.
+Find out [who uses zerolog](https://github.com/treavorj/zerolog/wiki/Who-uses-zerolog) and add your company / project to the list.
 
 ## Features
 
@@ -33,21 +40,21 @@ Find out [who uses zerolog](https://github.com/rs/zerolog/wiki/Who-uses-zerolog)
 ## Installation
 
 ```bash
-go get -u github.com/rs/zerolog/log
+go get -u github.com/treavorj/zerolog/log
 ```
 
 ## Getting Started
 
 ### Simple Logging Example
 
-For simple logging, import the global logger package **github.com/rs/zerolog/log**
+For simple logging, import the global logger package **github.com/treavorj/zerolog/log**
 
 ```go
 package main
 
 import (
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -71,8 +78,8 @@ func main() {
 package main
 
 import (
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -102,8 +109,8 @@ func main() {
 package main
 
 import (
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -139,8 +146,8 @@ package main
 import (
     "flag"
 
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -190,8 +197,8 @@ You may choose to log without a specific level by using the `Log` method. You ma
 package main
 
 import (
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -215,8 +222,8 @@ package main
 import (
 	"errors"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -240,10 +247,10 @@ package main
 
 import (
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog/pkgerrors"
+	"github.com/treavorj/zerolog/pkgerrors"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -287,8 +294,8 @@ package main
 import (
     "errors"
 
-    "github.com/rs/zerolog"
-    "github.com/rs/zerolog/log"
+    "github.com/treavorj/zerolog"
+    "github.com/treavorj/zerolog/log"
 )
 
 func main() {
@@ -557,7 +564,7 @@ func f() {
 
 ### Integration with `net/http`
 
-The `github.com/rs/zerolog/hlog` package provides some helpers to integrate zerolog with `http.Handler`.
+The `github.com/treavorj/zerolog/hlog` package provides some helpers to integrate zerolog with `http.Handler`.
 
 In this example we use [alice](https://github.com/justinas/alice) to install logger for better readability.
 

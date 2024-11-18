@@ -107,6 +107,124 @@ func BenchmarkLogWithDeDup(b *testing.B) {
 	})
 }
 
+func BenchmarkLogWithDeDupLong(b *testing.B) {
+	logger := New(io.Discard).With().
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		DeDup().
+		Logger()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			logger.Info().Str("foo", "bar").Msg(fakeMessage)
+		}
+	})
+}
+
+func BenchmarkLogWithoutDeDupLong(b *testing.B) {
+	logger := New(io.Discard).With().
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Str("string", "four!").
+		Time("time", time.Time{}).
+		Int("int", 123).
+		Float32("float", -2.203230293249593).
+		Logger()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			logger.Info().Str("foo", "bar").Msg(fakeMessage)
+		}
+	})
+}
 func BenchmarkLogWithDeDupDeep(b *testing.B) {
 	logger := New(io.Discard).With().
 		Str("foo", "bar").

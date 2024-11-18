@@ -1,3 +1,4 @@
+//go:build !binary_log
 // +build !binary_log
 
 package pkgerrors
@@ -9,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
+	"github.com/treavorj/zerolog"
 )
 
 func TestLogStack(t *testing.T) {
