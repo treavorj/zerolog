@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rs/zerolog/internal/cbor"
+	"github.com/treavorj/zerolog/internal/cbor"
 )
 
 func TestCtx(t *testing.T) {

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rs/zerolog"
+	"github.com/treavorj/zerolog"
 )
 
 func ExampleNew() {
