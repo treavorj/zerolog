@@ -8,7 +8,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/rs/zerolog/internal"
+	"github.com/treavorj/zerolog/internal"
 )
 
 var enc = Encoder{}

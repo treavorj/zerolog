@@ -1,4 +1,4 @@
-module github.com/rs/zerolog
+module github.com/treavorj/zerolog
 
 go 1.23
 

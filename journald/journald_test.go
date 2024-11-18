@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/coreos/go-systemd/v22/journal"
-	"github.com/rs/zerolog"
+	"github.com/treavorj/zerolog"
 )
 
 func ExampleNewJournalDWriter() {

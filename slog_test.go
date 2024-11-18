@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/internal/cbor"
+	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/internal/cbor"
 )
 
 func newSlogLogger(buf *bytes.Buffer) *slog.Logger {

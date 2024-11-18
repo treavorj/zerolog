@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/log"
 )
 
 // setup would normally be an init() function, however, there seems
