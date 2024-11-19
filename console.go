@@ -94,9 +94,9 @@ type ConsoleWriter struct {
 // NewConsoleWriter creates and initializes a new ConsoleWriter.
 func NewConsoleWriter(options ...func(w *ConsoleWriter)) ConsoleWriter {
 	w := ConsoleWriter{
-		Out:          os.Stdout,
-		TimeFormat:   consoleDefaultTimeFormat,
-		PartsOrder:   consoleDefaultPartsOrder(),
+		Out:        os.Stdout,
+		TimeFormat: consoleDefaultTimeFormat,
+		PartsOrder: consoleDefaultPartsOrder(),
 	}
 
 	for _, opt := range options {
@@ -283,7 +283,7 @@ func (w ConsoleWriter) writeFields(evt map[string]interface{}, buf *bytes.Buffer
 func (w ConsoleWriter) writePart(buf *bytes.Buffer, evt map[string]interface{}, p string) {
 	var f Formatter
 
-	if w.PartsExclude != nil && len(w.PartsExclude) > 0 {
+	if len(w.PartsExclude) > 0 {
 		for _, exclude := range w.PartsExclude {
 			if exclude == p {
 				return
