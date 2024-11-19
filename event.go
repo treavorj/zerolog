@@ -24,10 +24,10 @@ var eventPool = &sync.Pool{
 type Event struct {
 	buf       []byte
 	w         LevelWriter
-	level     Level
 	done      func(msg string)
-	stack     bool            // enable error stack trace
-	ch        []Hook          // hooks from context
+	ch        []Hook // hooks from context
+	stack     bool   // enable error stack trace
+	level     Level
 	skipFrame int             // The number of additional frames to skip when printing the caller.
 	ctx       context.Context // Optional Go context for event
 }
