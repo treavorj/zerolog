@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	errExample  = errors.New("fail")
 	fakeMessage = "Test logging, but use a somewhat realistic message length."
 )
 

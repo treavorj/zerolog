@@ -139,7 +139,7 @@ func TestHook(t *testing.T) {
 			// passing `nil` where a context is wanted is against
 			// the rules, but people still do it.
 			log = log.Hook(contextHook)
-			log.Info().Ctx(nil).Msg("test message") // nolint
+			log.Info().Ctx(context.Background()).Msg("test message") // nolint
 		}},
 		{"Context/valid", `{"level":"info","context-data":"12345abcdef","message":"test message"}` + "\n", func(log Logger) {
 			ctx := context.Background()
