@@ -198,10 +198,10 @@ func ParseLevel(levelStr string) (Level, error) {
 	}
 	i, err := strconv.Atoi(levelStr)
 	if err != nil {
-		return NoLevel, fmt.Errorf("Unknown Level String: '%s', defaulting to NoLevel", levelStr)
+		return NoLevel, fmt.Errorf("unknown Level String: '%s', defaulting to NoLevel", levelStr)
 	}
 	if i > 127 || i < -128 {
-		return NoLevel, fmt.Errorf("Out-Of-Bounds Level: '%d', defaulting to NoLevel", i)
+		return NoLevel, fmt.Errorf("out-Of-Bounds Level: '%d', defaulting to NoLevel", i)
 	}
 	return Level(i), nil
 }
@@ -228,10 +228,10 @@ func (l Level) MarshalText() ([]byte, error) {
 // you may consider a sync wrapper.
 type Logger struct {
 	w       LevelWriter
-	level   Level
 	sampler Sampler
 	context []byte
 	hooks   []Hook
+	level   Level
 	stack   bool
 	ctx     context.Context
 }
@@ -494,7 +494,7 @@ func (l *Logger) newEvent(level Level, done func(string)) *Event {
 	if level != NoLevel && LevelFieldName != "" {
 		e.Str(LevelFieldName, LevelFieldMarshalFunc(level))
 	}
-	if l.context != nil && len(l.context) > 1 {
+	if len(l.context) > 1 {
 		e.buf = enc.AppendObjectData(e.buf, l.context)
 	}
 	if l.stack {
