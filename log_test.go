@@ -1182,6 +1182,7 @@ func TestCallerMarshalFunc(t *testing.T) {
 
 		return runtime.FuncForPC(pc).Name() + ":" + file + ":" + strconv.Itoa(line)
 	}
+	var pc uintptr
 	pc, file, line, _ = runtime.Caller(0)
 	caller = CallerMarshalFunc(pc, file, line+2)
 	log.Log().Caller().Msg("msg")
