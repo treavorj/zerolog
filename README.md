@@ -1,12 +1,13 @@
 # Zero Allocation JSON Logger
 
-[![godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/treavorj/zerolog) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/rs/zerolog/master/LICENSE) [![Build Status](https://github.com/treavorj/zerolog/actions/workflows/test.yml/badge.svg)](https://github.com/treavorj/zerolog/actions/workflows/test.yml) [![Go Coverage](https://github.com/treavorj/zerolog/wiki/coverage.svg)](https://raw.githack.com/wiki/rs/zerolog/coverage.html)
+[![godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/treavorj/zerolog) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/treavorj/zerolog/master/LICENSE) [![Build Status](https://github.com/treavorj/zerolog/actions/workflows/test.yml/badge.svg)](https://github.com/treavorj/zerolog/actions/workflows/test.yml) [![Go Coverage](https://github.com/treavorj/zerolog/wiki/coverage.svg)](https://raw.githack.com/wiki/treavorj/zerolog/coverage.html)
 
 ## Important Note:
 
 The zerolog package provides a fast and simple logger dedicated to JSON output.
-This is a fork from the [original zerolog](https://github.com/rs/zerolog) which adds on some advanced features:
 
+This is a fork from the [original zerolog](https://github.com/rs/zerolog) which adds on some advanced features:
+- Improved performance by reducing memory footprint for objects
 - DeDup for deduplication of log entries
 
 ## Description
