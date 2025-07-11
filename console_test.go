@@ -2,11 +2,11 @@ package zerolog_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -30,6 +30,34 @@ func ExampleConsoleWriter_customFormatters() {
 
 	log.Info().Str("foo", "bar").Msg("Hello World")
 	// Output: <nil> INFO  | Hello World foo:BAR
+}
+
+func ExampleConsoleWriter_partValueFormatter() {
+	out := zerolog.ConsoleWriter{Out: os.Stdout, NoColor: true,
+		PartsOrder:    []string{"level", "one", "two", "three", "message"},
+		FieldsExclude: []string{"one", "two", "three"}}
+	out.FormatLevel = func(i interface{}) string { return strings.ToUpper(fmt.Sprintf("%-6s", i)) }
+	out.FormatFieldName = func(i interface{}) string { return fmt.Sprintf("%s:", i) }
+	out.FormatPartValueByName = func(i interface{}, s string) string {
+		var ret string
+		switch s {
+		case "one":
+			ret = strings.ToUpper(fmt.Sprintf("%s", i))
+		case "two":
+			ret = strings.ToLower(fmt.Sprintf("%s", i))
+		case "three":
+			ret = strings.ToLower(fmt.Sprintf("(%s)", i))
+		}
+		return ret
+	}
+	log := zerolog.New(out)
+
+	log.Info().Str("foo", "bar").
+		Str("two", "TEST_TWO").
+		Str("one", "test_one").
+		Str("three", "test_three").
+		Msg("Hello World")
+	// Output: INFO   TEST_ONE test_two (test_three) Hello World foo:bar
 }
 
 func ExampleNewConsoleWriter() {
@@ -289,22 +317,33 @@ func TestConsoleWriter(t *testing.T) {
 
 		ts := time.Unix(0, 0)
 		d := ts.UTC().Format(time.RFC3339)
-		evt := `{"time": "` + d + `", "level": "debug", "message": "Foobar", "foo": "bar", "caller": "` + filepath.Join(cwd, "foo", "bar.go") + `"}`
-		if runtime.GOOS == "windows" {
-			evt = strings.Replace(evt, "\\", "/", -1)
-		}
-		// t.Log(evt)
 
-		_, err = w.Write([]byte(evt))
+		fields := map[string]interface{}{
+			"time":    d,
+			"level":   "debug",
+			"message": "Foobar",
+			"foo":     "bar",
+			"caller":  filepath.Join(cwd, "foo", "bar.go"),
+		}
+
+		evt, err := json.Marshal(fields)
+		if err != nil {
+			t.Fatalf("Cannot marshal fields: %s", err)
+		}
+
+		_, err = w.Write(evt)
 		if err != nil {
 			t.Errorf("Unexpected error when writing output: %s", err)
 		}
 
+		// Define the expected output with forward slashes
 		expectedOutput := ts.Format(time.Kitchen) + " DBG foo/bar.go > Foobar foo=bar\n"
+
+		// Get the actual output and normalize path separators to forward slashes
 		actualOutput := buf.String()
-		if runtime.GOOS == "windows" {
-			actualOutput = strings.Replace(actualOutput, "\\", "/", -1)
-		}
+		actualOutput = strings.ReplaceAll(actualOutput, string(os.PathSeparator), "/")
+
+		// Compare the normalized actual output to the expected output
 		if actualOutput != expectedOutput {
 			t.Errorf("Unexpected output %q, want: %q", actualOutput, expectedOutput)
 		}
