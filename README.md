@@ -7,6 +7,7 @@
 The zerolog package provides a fast and simple logger dedicated to JSON output.
 
 This is a fork from the [original zerolog](https://github.com/rs/zerolog) which adds on some advanced features:
+
 - Improved performance by reducing memory footprint for objects
 - DeDup for deduplication of log entries
 
@@ -401,7 +402,7 @@ log.Info().Str("foo", "bar").
     Str("one", "test_one").
     Str("three", "test_three").
     Msg("Hello World")
-    
+
 // Output: INFO   TEST_ONE test_two (test_three) Hello World foo:bar
 ```
 
@@ -709,6 +710,9 @@ Some settings can be changed and will be applied to all loggers:
 - `RawJSON`: Adds a field with an already encoded JSON (`[]byte`)
 - `Hex`: Adds a field with value formatted as a hexadecimal string (`[]byte`)
 - `Interface`: Uses reflection to marshal the type.
+- `IPAddr`: Adds a field with `net.IP`.
+- `IPPrefix`: Adds a field with `net.IPNet`.
+- `MACAddr`: Adds a field withg `net.HardwareAddr`
 - `Any`: Wrapper for `Interface`.
 
 Most fields are also available in the slice format (`Strs` for `[]string`, `Errs` for `[]error` etc.)

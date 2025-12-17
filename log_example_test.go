@@ -1,5 +1,4 @@
 //go:build !binary_log
-// +build !binary_log
 
 package zerolog_test
 
@@ -7,13 +6,18 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	stdlog "log"
 	"net"
 	"os"
+	"os/exec"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/diode"
+	"github.com/treavorj/zerolog/internal/cbor"
 )
 
 func ExampleNew() {
@@ -104,6 +108,83 @@ func ExampleLogger_Println() {
 	log.Println("hello world")
 
 	// Output: {"level":"debug","message":"hello world\n"}
+}
+
+func ExampleLogger_Debugf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Debugf("hello %s", "world")
+
+	// Output: {"level":"debug","message":"hello world"}
+}
+
+func ExampleLogger_Infof() {
+	log := zerolog.New(os.Stdout)
+
+	log.Infof("hello %s", "world")
+
+	// Output: {"level":"info","message":"hello world"}
+}
+
+func ExampleLogger_Warnf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Warnf("hello %s", "world")
+
+	// Output: {"level":"warn","message":"hello world"}
+}
+
+func ExampleLogger_Warningf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Warningf("hello %s", "world")
+
+	// Output: {"level":"warn","message":"hello world"}
+}
+
+func ExampleLogger_Errorf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Errorf("hello %s", "world")
+
+	// Output: {"level":"error","message":"hello world"}
+}
+
+func TestExampleLogger_Fatalf(t *testing.T) {
+	if os.Getenv("TEST_FATAL") == "1" {
+		w := diode.NewWriter(os.Stderr, 1000, 0, func(missed int) {
+			fmt.Printf("Dropped %d messages\n", missed)
+		})
+		defer w.Close()
+		log := zerolog.New(w)
+		log.Fatalf("hello %s", "world")
+		return
+	}
+
+	cmd := exec.Command(os.Args[0], "-test.run=TestExampleLogger_Fatalf")
+	cmd.Env = append(os.Environ(), "TEST_FATAL=1")
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = cmd.Start()
+	if err != nil {
+		t.Fatal(err)
+	}
+	slurp, err := io.ReadAll(stderr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = cmd.Wait()
+	if err == nil {
+		t.Error("Expected log.Fatal to exit with non-zero status")
+	}
+
+	want := "{\"level\":\"fatal\",\"message\":\"hello world\"}\n"
+	got := cbor.DecodeIfBinaryToString(slurp)
+	if got != want {
+		t.Errorf("Diode Fatal Test failed. got:%s, want:%s!", got, want)
+	}
 }
 
 func ExampleLogger_Trace() {
@@ -510,6 +591,17 @@ func ExampleContext_IPAddr() {
 	// Output: {"HostIP":"192.168.0.100","message":"hello world"}
 }
 
+func ExampleContext_IPAddrs() {
+	hostIP := net.IP{192, 168, 0, 100}
+	log := zerolog.New(os.Stdout).With().
+		IPAddrs("HostIP", []net.IP{hostIP}).
+		Logger()
+
+	log.Log().Msg("hello world")
+
+	// Output: {"HostIP":["192.168.0.100"],"message":"hello world"}
+}
+
 func ExampleContext_IPPrefix() {
 	route := net.IPNet{IP: net.IP{192, 168, 0, 0}, Mask: net.CIDRMask(24, 32)}
 	log := zerolog.New(os.Stdout).With().
@@ -519,6 +611,17 @@ func ExampleContext_IPPrefix() {
 	log.Log().Msg("hello world")
 
 	// Output: {"Route":"192.168.0.0/24","message":"hello world"}
+}
+
+func ExampleContext_IPPrefixes() {
+	route := net.IPNet{IP: net.IP{192, 168, 0, 0}, Mask: net.CIDRMask(24, 32)}
+	log := zerolog.New(os.Stdout).With().
+		IPPrefixes("Route", []net.IPNet{route}).
+		Logger()
+
+	log.Log().Msg("hello world")
+
+	// Output: {"Route":["192.168.0.0/24"],"message":"hello world"}
 }
 
 func ExampleContext_MACAddr() {
@@ -562,6 +665,21 @@ func ExampleContext_Fields_slice() {
 	log.Log().Msg("hello world")
 
 	// Output: {"foo":"bar","bar":"baz","n":1,"message":"hello world"}
+}
+
+func ExampleContext_Times() {
+	t1 := time.Time{}
+	t2 := t1.Add(time.Second * 10)
+	t := []time.Time{t1, t2}
+
+	log := zerolog.New(os.Stdout).With().
+		Str("foo", "bar").
+		Times("times", t).
+		Logger()
+
+	log.Log().Msg("hello world")
+
+	// Output: {"foo":"bar","times":["0001-01-01T00:00:00Z","0001-01-01T00:00:10Z"],"message":"hello world"}
 }
 
 func ExampleContext_DeDup() {
