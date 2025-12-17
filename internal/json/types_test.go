@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/rs/zerolog/internal"
+	"github.com/treavorj/zerolog/internal"
 )
 
 func TestAppendNil(t *testing.T) {

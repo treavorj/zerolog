@@ -1,5 +1,4 @@
 //go:build !binary_log
-// +build !binary_log
 
 package zerolog_test
 
@@ -599,7 +598,8 @@ func ExampleContext_Times() {
 	log.Log().Msg("hello world")
 
 	// Output: {"foo":"bar","times":["0001-01-01T00:00:00Z","0001-01-01T00:00:10Z"],"message":"hello world"}
-	
+}
+
 func ExampleContext_DeDup() {
 	log := zerolog.New(os.Stdout).
 		With().

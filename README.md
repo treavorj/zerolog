@@ -7,6 +7,7 @@
 The zerolog package provides a fast and simple logger dedicated to JSON output.
 
 This is a fork from the [original zerolog](https://github.com/rs/zerolog) which adds on some advanced features:
+
 - Improved performance by reducing memory footprint for objects
 - DeDup for deduplication of log entries
 

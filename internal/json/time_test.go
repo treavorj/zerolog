@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rs/zerolog/internal"
+	"github.com/treavorj/zerolog/internal"
 )
 
 func TestAppendTimeNow(t *testing.T) {
