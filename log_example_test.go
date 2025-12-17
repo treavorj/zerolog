@@ -6,13 +6,18 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	stdlog "log"
 	"net"
 	"os"
+	"os/exec"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/treavorj/zerolog"
+	"github.com/treavorj/zerolog/diode"
+	"github.com/treavorj/zerolog/internal/cbor"
 )
 
 func ExampleNew() {
@@ -103,6 +108,83 @@ func ExampleLogger_Println() {
 	log.Println("hello world")
 
 	// Output: {"level":"debug","message":"hello world\n"}
+}
+
+func ExampleLogger_Debugf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Debugf("hello %s", "world")
+
+	// Output: {"level":"debug","message":"hello world"}
+}
+
+func ExampleLogger_Infof() {
+	log := zerolog.New(os.Stdout)
+
+	log.Infof("hello %s", "world")
+
+	// Output: {"level":"info","message":"hello world"}
+}
+
+func ExampleLogger_Warnf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Warnf("hello %s", "world")
+
+	// Output: {"level":"warn","message":"hello world"}
+}
+
+func ExampleLogger_Warningf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Warningf("hello %s", "world")
+
+	// Output: {"level":"warn","message":"hello world"}
+}
+
+func ExampleLogger_Errorf() {
+	log := zerolog.New(os.Stdout)
+
+	log.Errorf("hello %s", "world")
+
+	// Output: {"level":"error","message":"hello world"}
+}
+
+func TestExampleLogger_Fatalf(t *testing.T) {
+	if os.Getenv("TEST_FATAL") == "1" {
+		w := diode.NewWriter(os.Stderr, 1000, 0, func(missed int) {
+			fmt.Printf("Dropped %d messages\n", missed)
+		})
+		defer w.Close()
+		log := zerolog.New(w)
+		log.Fatalf("hello %s", "world")
+		return
+	}
+
+	cmd := exec.Command(os.Args[0], "-test.run=TestExampleLogger_Fatalf")
+	cmd.Env = append(os.Environ(), "TEST_FATAL=1")
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = cmd.Start()
+	if err != nil {
+		t.Fatal(err)
+	}
+	slurp, err := io.ReadAll(stderr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = cmd.Wait()
+	if err == nil {
+		t.Error("Expected log.Fatal to exit with non-zero status")
+	}
+
+	want := "{\"level\":\"fatal\",\"message\":\"hello world\"}\n"
+	got := cbor.DecodeIfBinaryToString(slurp)
+	if got != want {
+		t.Errorf("Diode Fatal Test failed. got:%s, want:%s!", got, want)
+	}
 }
 
 func ExampleLogger_Trace() {
