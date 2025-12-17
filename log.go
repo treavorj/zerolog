@@ -473,6 +473,52 @@ func (l *Logger) Println(v ...interface{}) {
 	}
 }
 
+// Debugf sends a log event using debug level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Debugf(format string, v ...interface{}) {
+	if e := l.Debug(); e.Enabled() {
+		e.CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+	}
+}
+
+// Infof sends a log event using info level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Infof(format string, v ...interface{}) {
+	if e := l.Info(); e.Enabled() {
+		e.CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+	}
+}
+
+// Warnf sends a log event using warning level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Warnf(format string, v ...interface{}) {
+	if e := l.Warn(); e.Enabled() {
+		e.CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+	}
+}
+
+// Warningf sends a log event using warning level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Warningf(format string, v ...interface{}) {
+	if e := l.Warn(); e.Enabled() {
+		e.CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+	}
+}
+
+// Errorf sends a log event using error level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Errorf(format string, v ...interface{}) {
+	if e := l.Error(); e.Enabled() {
+		e.CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+	}
+}
+
+// Fatalf sends a log event using fatal level and no extra field.
+// Arguments are handled in the manner of fmt.Printf.
+func (l *Logger) Fatalf(format string, v ...interface{}) {
+	l.Fatal().CallerSkipFrame(1).Msg(fmt.Sprintf(format, v...))
+}
+
 // Write implements the io.Writer interface. This is useful to set as a writer
 // for the standard library log.
 func (l Logger) Write(p []byte) (n int, err error) {
