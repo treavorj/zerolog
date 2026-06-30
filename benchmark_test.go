@@ -1,7 +1,6 @@
 package zerolog
 
 import (
-	"errors"
 	"io"
 	"testing"
 	"time"

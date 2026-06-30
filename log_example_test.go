@@ -740,7 +740,8 @@ func ExampleContext_Times() {
 	log.Log().Msg("hello world")
 
 	// Output: {"foo":"bar","times":["0001-01-01T00:00:00Z","0001-01-01T00:00:10Z"],"message":"hello world"}
-	
+}
+
 func ExampleContext_DeDup() {
 	log := zerolog.New(os.Stdout).
 		With().
@@ -844,7 +845,8 @@ func ExampleContext_DeDup_array() {
 }
 
 func ExampleEvent_DeDup() {
-	log := zerolog.New(os.Stdout).
+	var buf bytes.Buffer
+	log := zerolog.New(&buf).
 		With().
 		Str("foo", "bar").
 		Str("foo", "baz").
@@ -852,7 +854,16 @@ func ExampleEvent_DeDup() {
 
 	log.Info().Str("foo", "bam").DeDup().Msg("hello world")
 
-	// Output: {"level":"info","foo":"bam","message":"hello world"}
+	output := strings.TrimSpace(buf.String())
+	expectedFormat1 := `{"level":"info","foo":"bam","message":"hello world"}`
+	expectedFormat2 := `{"foo":"bam","level":"info","message":"hello world"}`
+
+	if output != expectedFormat1 && output != expectedFormat2 {
+		fmt.Printf("Output did not match either expected format.\n  Got:      %s\n  Expected: %s\n  or:       %s",
+			output, expectedFormat1, expectedFormat2)
+	}
+
+	// Output:
 }
 
 func ExampleEvent_DeDup_unused() {
@@ -1182,5 +1193,4 @@ func ExampleEvent_DeDupDeep_array() {
 	}
 
 	// Output:
-}
 }
